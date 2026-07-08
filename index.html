@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="hi" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#d97706">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="GUL CRM - Smart Jaggery Business Management System">
+    <title>GUL CRM - Smart Jaggery Business Management System</title>
+    
+    <!-- External Libraries -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- External CSS File -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="text-slate-800 transition-colors duration-200 dark:text-slate-100 min-h-screen flex flex-col pb-20 md:pb-0 md:pl-64">
+
+    <!-- TOP BAR (GLOBAL HEADER) -->
+    <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-16 px-4 flex items-center justify-between sticky top-0 z-40 shadow-sm">
+        <div class="flex items-center gap-3">
+            <button onclick="toggleSidebar()" class="md:hidden text-gray-600 dark:text-gray-300 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <div class="flex items-center gap-2">
+                <span class="bg-jaggery-600 bg-jaggery-color text-white font-black p-1.5 rounded-lg text-lg flex items-center justify-center w-9 h-9 shadow-md">G</span>
+                <div>
+                    <h1 class="text-base font-bold text-amber-700 dark:text-amber-500 leading-none">GUL CRM</h1>
+                    <span class="text-[10px] text-gray-500 dark:text-gray-400 font-bold tracking-wider uppercase">Jaggery Operating System</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button onclick="switchTab('search')" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 focus:outline-none">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            <button onclick="openSmartClipboard()" class="bg-amber-100 text-amber-900 dark:bg-amber-900 dark:text-amber-300 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-sm hover:scale-105 transition focus:outline-none">
+                <i class="fa-solid fa-wand-magic-sparkles animate-pulse"></i> <span class="hidden sm:inline">Paste AI</span>
+            </button>
+            <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 focus:outline-none">
+                <i id="theme-icon" class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- LEFT SIDEBAR & NAVIGATION DRAWER -->
+    <nav id="sidebar" class="fixed top-0 bottom-0 left-0 z-50 w-64 bg-gray-950 text-gray-300 flex flex-col justify-between transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out border-r border-gray-800 shadow-2xl md:shadow-none">
+        <div>
+            <div class="p-4 flex items-center justify-between border-b border-gray-800 bg-gray-900">
+                <div class="flex items-center gap-3">
+                    <span class="bg-jaggery-color text-white font-bold p-1.5 rounded-lg text-lg flex items-center justify-center w-9 h-9">G</span>
+                    <div>
+                        <h2 class="text-sm font-bold text-white leading-none">GUL Enterprise</h2>
+                        <span class="text-[10px] text-amber-500 font-bold tracking-widest uppercase">Smart Core OS</span>
+                    </div>
+                </div>
+                <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white p-2">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Core Nav Buttons -->
+            <div class="p-3 space-y-1 overflow-y-auto max-h-[calc(100vh-140px)] hide-scroll">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-3 py-3 rounded-xl font-bold text-sm transition-all text-left bg-jaggery-color text-white shadow-md focus:outline-none">
+                    <i class="fa-solid fa-chart-pie w-5 text-center"></i> Dashboard
+                </button>
+                <button onclick="switchTab('buyers')" id="nav-buyers" class="nav-btn w-full flex items-center gap-3 px-3 py-3 rounded-xl font-semibold text-sm transition-all text-left hover:bg-gray-850 hover:text-white text-gray-400 focus:outline-none">
+                    <i class="fa-solid fa-users w-5 text-center"></i> Buyer CRM
+                </button>
+                <button onclick="switchTab('suppliers')" id="nav-suppliers" class="nav-btn w-full flex items-center gap-3 px-3 py-3 rounded-xl font-semibold text-sm transition-all text-left hover:bg-gray-850 hover:text-white text-gray-400 focus:outline-none">
+                    <i class="fa-solid fa-boxes-packing w-5 text-center"></i> Supplier Matrix
+                </button>
+                <button onclick="switchTab('farmers')" id="nav-farmers" class="nav-btn w-full flex items-center gap-3 px-3 py-3 rounded-xl font-semibold text-sm transition-all text-left hover:bg-gray-850 hover:text-white text-gray-400 focus:outline-none">
+                    <i class="fa-solid fa-tractor w-5 text-center"></i> Farmer Network
+                </button>
+                <button onclick="switchTab('bhattis')" id="nav-bhattis" class="nav-btn w-full flex items-center gap-3 px-3 py-3 rounded-xl font-semibold text-sm transition-all text-left hover:bg-gray-850 hover:text-white text-gray-400 focus:outline-none">
+                    <i class="fa-solid fa-fire-burner w-5 text-center"></i> Bhatti Module
+                </button>
+                <button onclick="switchTab('transport')" id="nav-transport" class="nav-btn w-full flex items-center gap-3 px-3 py-3 rounded-xl font-semibold text-sm transition-all text-left hover:bg-gray-850 hover:text-white text-gray-400 focus:outline-none">
+                    <i class="fa-solid fa-truck-fast w-5 text-center"></i> Transport Fleet
+                </button>
+                <button onclick="switchTab('warehouse')" id="nav-warehouse" class="nav-btn w-full flex items-center gap-3 px-3 py-3 rounded-xl font-semibold text-sm transition-all text-left hover:bg-gray-850 hover:text-white text-gray-400 focus:outline-none">
+                    <i class="fa-solid fa-warehouse w-5 text-center"></i> Warehouse Stock
+                </button>
+                <button onclick="switchTab('orders')" id="nav-orders" class="nav-btn w-full flex items-center gap-3 px-3 py-3 rounded-xl font-semibold text-sm transition-all text-left hover:bg-gray-850 hover:text-white text-gray-400 focus:outline-none">
+                    <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i> Orders Desk
+                </button>
+                <button onclick="switchTab('payments')" id="nav-payments" class="nav-btn w-full flex items-center gap-3 px-3 py-3 rounded-xl font-semibold text-sm transition-all text-left hover:bg-gray-850 hover:text-white text-gray-400 focus:outline-none">
+                    <i class="fa-solid fa-indian-rupee-sign w-5 text-center"></i> Payments Log
+                </button>
+                
+                <div class="my-2 border-t border-gray-800"></div>
+                
+                <button onclick="switchTab('search')" id="nav-search" class="nav-btn w-full flex items-center gap-3 px-3 py-3 rounded-xl font-semibold text-sm transition-all text-left hover:bg-gray-850 hover:text-white text-gray-400 focus:outline-none">
+                    <i class="fa-solid fa-filter w-5 text-center"></i> Smart Filters
+                </button>
+                <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn w-full flex items-center gap-3 px-3 py-3 rounded-xl font-semibold text-sm transition-all text-left hover:bg-gray-850 hover:text-white text-gray-400 focus:outline-none">
+                    <i class="fa-solid fa-gear w-5 text-center"></i> Settings & Data
+                </button>
+            </div>
+        </div>
+        <div class="p-4 border-t border-gray-800 bg-gray-950 text-xs text-gray-400 flex flex-col gap-1 items-center md:items-start text-center md:text-left">
+            <p class="font-bold text-gray-300" id="sb-business-name">GUL Trading Co.</p>
+            <p class="flex items-center gap-1 justify-center md:justify-start"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> App Sync Ready</p>
+        </div>
+    </nav>
+
+    <!-- MOBILE NAVIGATION BOTTOM TAB BAR -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex items-center justify-around z-45 md:hidden shadow-lg pb-safe pt-1 px-2 h-16">
+        <button onclick="switchTab('dashboard')" class="mob-nav-btn text-amber-600 flex flex-col items-center justify-center w-14 h-12 rounded-xl text-center focus:outline-none" id="mob-nav-dashboard">
+            <i class="fa-solid fa-chart-pie text-xl"></i>
+            <span class="text-[10px] font-bold mt-0.5">Home</span>
+        </button>
+        <button onclick="switchTab('buyers')" class="mob-nav-btn text-gray-400 dark:text-gray-500 flex flex-col items-center justify-center w-14 h-12 rounded-xl text-center focus:outline-none" id="mob-nav-buyers">
+            <i class="fa-solid fa-users text-xl"></i>
+            <span class="text-[10px] font-bold mt-0.5">Buyers</span>
+        </button>
+        <button onclick="openFormModal('order')" class="bg-jaggery-color text-white flex flex-col items-center justify-center w-12 h-12 rounded-full text-center shadow-lg relative -top-4 border-4 border-gray-50 dark:border-gray-900 focus:outline-none">
+            <i class="fa-solid fa-plus text-xl"></i>
+        </button>
+        <button onclick="switchTab('orders')" class="mob-nav-btn text-gray-400 dark:text-gray-500 flex flex-col items-center justify-center w-14 h-12 rounded-xl text-center focus:outline-none" id="mob-nav-orders">
+            <i class="fa-solid fa-file-invoice-dollar text-xl"></i>
+            <span class="text-[10px] font-bold mt-0.5">Orders</span>
+        </button>
+        <button onclick="switchTab('warehouse')" class="mob-nav-btn text-gray-400 dark:text-gray-500 flex flex-col items-center justify-center w-14 h-12 rounded-xl text-center focus:outline-none" id="mob-nav-warehouse">
+            <i class="fa-solid fa-warehouse text-xl"></i>
+            <span class="text-[10px] font-bold mt-0.5">Stock</span>
+        </button>
+    </div>
+
+    <!-- MAIN CRM INTERFACE COMPONENT -->
+    <main class="p-4 md:p-6 flex-1 overflow-x-hidden">
+
+        <!-- ================= PANEL 1: DASHBOARD ================= -->
+        <section id="panel-dashboard" class="tab-panel space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                    <h2 class="text-2xl font-extrabold tracking-tight text-gray-950 dark:text-white">Jaggery Control Center</h2>
+                    <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 mt-1">Live metrics, follow-ups, and operational updates.</p>
+                </div>
+                <div class="text-xs font-bold text-gray-500 bg-gray-100 dark:bg-gray-850 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-755">
+                    <i class="fa-regular fa-calendar mr-1"></i> <span id="live-date">...</span>
+                </div>
+            </div>
+
+            <!-- Modern Follow-Up Swipe Carousel -->
+            <div class="bg-gradient-to-br from-yellow-600 to-amber-800 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden">
+                <div class="absolute right-[-20px] bottom-[-40px] opacity-10 text-9xl font-black pointer-events-none transform rotate-12">GUD</div>
+                <div class="flex justify-between items-center mb-4 relative z-10">
+                    <div class="flex items-center gap-2">
+                        <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest border border-white/20 shadow-sm">
+                            <i class="fa-solid fa-bolt text-yellow-300 mr-1"></i> Today's Follow-ups
+                        </span>
+                        <span id="slider-count-badge" class="bg-white text-amber-955 text-xs font-black px-2 py-0.5 rounded-full shadow-sm">0/0</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="prevFollowUp()" class="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center text-sm transition backdrop-blur-sm focus:outline-none"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button onclick="nextFollowUp()" class="w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center text-sm transition backdrop-blur-sm focus:outline-none"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div id="followup-slider-container" class="min-h-[130px] flex flex-col justify-between relative z-10">
+                    <!-- Carousel Data injected programmatically -->
+                </div>
+            </div>
+
+            <!-- Stats Overview Matrix -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition group">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[10px] font-black text-gray-400 block uppercase tracking-wider mb-1">Total Buyers</span>
+                            <span class="text-2xl font-extrabold text-gray-800 dark:text-white group-hover:text-amber-600 transition" id="m-total-buyers">0</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 flex items-center justify-center text-lg"><i class="fa-solid fa-user-tie"></i></div>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition group">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[10px] font-black text-gray-400 block uppercase tracking-wider mb-1">Pending Orders</span>
+                            <span class="text-2xl font-extrabold text-gray-800 dark:text-white group-hover:text-amber-650 transition" id="m-total-orders">0</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 flex items-center justify-center text-lg"><i class="fa-solid fa-truck-fast"></i></div>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition group">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[10px] font-black text-gray-400 block uppercase tracking-wider mb-1">Active Suppliers</span>
+                            <span class="text-2xl font-extrabold text-gray-800 dark:text-white group-hover:text-amber-600 transition" id="m-total-suppliers">0</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-900/30 text-purple-600 flex items-center justify-center text-lg"><i class="fa-solid fa-boxes-packing"></i></div>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition group">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[10px] font-black text-gray-400 block uppercase tracking-wider mb-1">Live Stock (Qtl)</span>
+                            <span class="text-2xl font-extrabold text-gray-800 dark:text-white group-hover:text-amber-600 transition" id="m-total-stock">0</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/30 text-amber-600 flex items-center justify-center text-lg"><i class="fa-solid fa-warehouse"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Quick Commands Shell -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm lg:col-span-1 space-y-4">
+                    <h3 class="text-sm font-extrabold text-gray-800 dark:text-white uppercase tracking-wider border-b border-gray-100 dark:border-gray-700 pb-2">Quick Commands</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="openFormModal('buyer')" class="p-3 bg-gray-50 hover:bg-amber-50 dark:bg-gray-900/50 dark:hover:bg-amber-900/20 border border-gray-200 dark:border-gray-700 rounded-xl text-left transition text-[11px] font-bold text-gray-600 dark:text-gray-300 group shadow-sm hover:shadow-md focus:outline-none">
+                            <i class="fa-solid fa-user-plus text-blue-500 group-hover:scale-110 transition block mb-1.5 text-lg"></i> Add Buyer
+                        </button>
+                        <button onclick="openFormModal('order')" class="p-3 bg-gray-50 hover:bg-emerald-50 dark:bg-gray-900/50 dark:hover:bg-amber-900/20 border border-gray-200 dark:border-gray-700 rounded-xl text-left transition text-[11px] font-bold text-gray-600 dark:text-gray-300 group shadow-sm hover:shadow-md focus:outline-none">
+                            <i class="fa-solid fa-file-invoice text-emerald-500 group-hover:scale-110 transition block mb-1.5 text-lg"></i> Book Order
+                        </button>
+                        <button onclick="openFormModal('payment')" class="p-3 bg-gray-50 hover:bg-purple-50 dark:bg-gray-900/50 dark:hover:bg-amber-900/20 border border-gray-200 dark:border-gray-700 rounded-xl text-left transition text-[11px] font-bold text-gray-600 dark:text-gray-300 group shadow-sm hover:shadow-md focus:outline-none">
+                            <i class="fa-solid fa-indian-rupee-sign text-purple-500 group-hover:scale-110 transition block mb-1.5 text-lg"></i> Add Payment
+                        </button>
+                        <button onclick="openFormModal('inventory')" class="p-3 bg-gray-50 hover:bg-orange-50 dark:bg-gray-900/50 dark:hover:bg-amber-900/20 border border-gray-200 dark:border-gray-700 rounded-xl text-left transition text-[11px] font-bold text-gray-600 dark:text-gray-300 group shadow-sm hover:shadow-md focus:outline-none">
+                            <i class="fa-solid fa-boxes-stacked text-orange-500 group-hover:scale-110 transition block mb-1.5 text-lg"></i> Stock In/Out
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Audit Stream -->
+                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm lg:col-span-2 flex flex-col h-[320px]">
+                    <div class="flex justify-between items-center border-b border-gray-100 dark:border-gray-700 pb-3 mb-3">
+                        <h3 class="text-sm font-extrabold text-gray-800 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Activity Timeline
+                        </h3>
+                    </div>
+                    <div id="dashboard-timeline-box" class="flex-1 overflow-y-auto space-y-3 pr-2 hide-scroll">
+                        <!-- Stream logs generated natively -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PANEL 2: BUYERS ================= -->
+        <section id="panel-buyers" class="tab-panel hidden space-y-5">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                    <h2 class="text-xl font-extrabold text-gray-800 dark:text-white">Buyer Relationship Matrix</h2>
+                    <p class="text-xs font-semibold text-gray-500">Manage procurement leads, profiles, and requirements.</p>
+                </div>
+                <button onclick="openFormModal('buyer')" class="bg-jaggery-color text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md hover:bg-amber-700 transition flex items-center gap-2 w-full sm:w-auto justify-center focus:outline-none">
+                    <i class="fa-solid fa-plus"></i> Register Buyer
+                </button>
+            </div>
+            <div id="buyer-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            
+            <!-- Pagination Controls -->
+            <div id="pagination-container" class="flex flex-col sm:flex-row justify-between items-center gap-3 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="text-xs font-bold text-gray-500">
+                    Showing <span id="page-start">0</span> - <span id="page-end">0</span> of <span id="total-records">0</span> buyers
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="changePage('prev')" id="prev-page-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg text-sm font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none">
+                        <i class="fa-solid fa-chevron-left"></i> Previous
+                    </button>
+                    <span id="page-info" class="text-sm font-bold text-gray-600 dark:text-gray-300 px-3">Page 1 of 1</span>
+                    <button onclick="changePage('next')" id="next-page-btn" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg text-sm font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none">
+                        Next <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Quick Negotiation Helper in Buyer Cards -->
+<!-- Add this button inside each buyer card -->
+<button onclick="quickNegotiate('${b.id}')" class="w-10 flex items-center justify-center bg-amber-50 text-amber-600 dark:bg-amber-900/30 rounded-xl hover:bg-amber-100 transition focus:outline-none">
+    <i class="fa-solid fa-handshake text-sm"></i>
+</button>
+        
+        <!-- Buyer Filters & Segmentation -->
+<div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm mb-4">
+    <div class="flex flex-wrap gap-3 items-center">
+        <div class="flex-1 min-w-[150px]">
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Buyer Tier</label>
+            <select id="filter-tier" onchange="filterBuyersByTier()" class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-2.5 outline-none focus:border-amber-500 transition">
+                <option value="all">All Tiers</option>
+                <option value="premium">⭐ Premium (High Volume)</option>
+                <option value="medium">📈 Medium (Consistent)</option>
+                <option value="new">🌱 New/Test</option>
+            </select>
+        </div>
+        <div class="flex-1 min-w-[150px]">
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Order Status</label>
+            <select id="filter-order-status" onchange="filterBuyersByStatus()" class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-2.5 outline-none focus:border-amber-500 transition">
+                <option value="all">All Status</option>
+                <option value="negotiation">🤝 Negotiation</option>
+                <option value="order-placed">✅ Order Placed</option>
+                <option value="delivered">📦 Delivered</option>
+                <option value="repeat">🔄 Repeat Buyer</option>
+                <option value="lost">❌ Lost</option>
+            </select>
+        </div>
+        <div class="flex-1 min-w-[120px]">
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Min Score</label>
+            <input type="number" id="filter-min-score" oninput="filterBuyersByScore()" placeholder="50" class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-2.5 outline-none focus:border-amber-500 transition">
+        </div>
+        <button onclick="resetBuyerFilters()" class="mt-4 sm:mt-0 px-4 py-2.5 bg-gray-200 dark:bg-gray-700 rounded-xl text-xs font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+            <i class="fa-solid fa-rotate"></i> Reset Filters
+        </button>
+    </div>
+</div>
+
+<!-- Buyer Score Summary -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+    <div class="bg-gradient-to-r from-amber-500 to-amber-600 text-white p-3 rounded-xl">
+        <span class="text-[10px] font-black opacity-80 uppercase tracking-wider">Premium Buyers</span>
+        <div class="text-2xl font-extrabold" id="premium-count">0</div>
+    </div>
+    <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-3 rounded-xl">
+        <span class="text-[10px] font-black opacity-80 uppercase tracking-wider">Active Deals</span>
+        <div class="text-2xl font-extrabold" id="active-deals">0</div>
+    </div>
+    <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-3 rounded-xl">
+        <span class="text-[10px] font-black opacity-80 uppercase tracking-wider">Season Revenue</span>
+        <div class="text-2xl font-extrabold" id="season-revenue">₹0</div>
+    </div>
+    <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-3 rounded-xl">
+        <span class="text-[10px] font-black opacity-80 uppercase tracking-wider">Target Progress</span>
+        <div class="text-2xl font-extrabold" id="target-progress">0%</div>
+    </div>
+</div>
+
+        <!-- ================= PANEL 3: SUPPLIERS ================= -->
+        <section id="panel-suppliers" class="tab-panel hidden space-y-5">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                    <h2 class="text-xl font-extrabold text-gray-800 dark:text-white">Khandsari / Suppliers Ledger</h2>
+                    <p class="text-xs font-semibold text-gray-500">Track raw production capacity and wholesale rates.</p>
+                </div>
+                <button onclick="openFormModal('supplier')" class="bg-blue-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md hover:bg-blue-700 transition flex items-center gap-2 w-full sm:w-auto justify-center focus:outline-none">
+                    <i class="fa-solid fa-plus"></i> Register Supplier
+                </button>
+            </div>
+            <div id="supplier-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+        
+        <!-- ================= PANEL 4: FARMERS ================= -->
+        <section id="panel-farmers" class="tab-panel hidden space-y-5">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                    <h2 class="text-xl font-extrabold text-gray-800 dark:text-white">Sugarcane Farmer Hub</h2>
+                    <p class="text-xs font-semibold text-gray-500">Manage cane varieties, crop areas, and harvest estimates.</p>
+                </div>
+                <button onclick="openFormModal('farmer')" class="bg-emerald-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md hover:bg-emerald-700 transition flex items-center gap-2 w-full sm:w-auto justify-center focus:outline-none">
+                    <i class="fa-solid fa-tractor"></i> Add Farmer Profile
+                </button>
+            </div>
+            <div id="farmer-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+
+        <!-- ================= PANEL 5: BHATTIS ================= -->
+        <section id="panel-bhattis" class="tab-panel hidden space-y-5">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                    <h2 class="text-xl font-extrabold text-gray-800 dark:text-white">Bhatti Processing Units</h2>
+                    <p class="text-xs font-semibold text-gray-500">Monitor active pan limits, fuels, and village locations.</p>
+                </div>
+                <button onclick="openFormModal('bhatti')" class="bg-orange-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md hover:bg-orange-700 transition flex items-center gap-2 w-full sm:w-auto justify-center focus:outline-none">
+                    <i class="fa-solid fa-fire-burner"></i> Add Bhatti Unit
+                </button>
+            </div>
+            <div id="bhatti-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+
+        <!-- ================= PANEL 6: TRANSPORT ================= -->
+        <section id="panel-transport" class="tab-panel hidden space-y-5">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                    <h2 class="text-xl font-extrabold text-gray-800 dark:text-white">Transport & Freight Fleet</h2>
+                    <p class="text-xs font-semibold text-gray-500">Manage drivers, trucks, capacities and freight rates.</p>
+                </div>
+                <button onclick="openFormModal('transport')" class="bg-indigo-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md hover:bg-indigo-700 transition flex items-center gap-2 w-full sm:w-auto justify-center focus:outline-none">
+                    <i class="fa-solid fa-truck"></i> Register Vehicle
+                </button>
+            </div>
+            <div id="transport-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+
+        <!-- ================= PANEL 7: WAREHOUSE ================= -->
+        <section id="panel-warehouse" class="tab-panel hidden space-y-5">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                    <h2 class="text-xl font-extrabold text-gray-800 dark:text-white">Central Warehouse Ledger</h2>
+                    <p class="text-xs font-semibold text-gray-500">Real-time inventory levels based on standard product types.</p>
+                </div>
+                <button onclick="openFormModal('inventory')" class="bg-jaggery-color text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md hover:bg-amber-700 transition flex items-center gap-2 w-full sm:w-auto justify-center focus:outline-none">
+                    <i class="fa-solid fa-boxes-stacked"></i> Adjust Stock Entry
+                </button>
+            </div>
+
+            <div id="warehouse-stats-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-4"></div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm">
+                <h3 class="text-sm font-extrabold mb-4 uppercase tracking-wider border-b border-gray-100 dark:border-gray-700 pb-2">Recent Inventory Adjustments</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs min-w-[500px]">
+                        <thead>
+                            <tr class="bg-gray-50 dark:bg-gray-900/50 text-gray-550 dark:text-gray-400 font-bold uppercase tracking-wider">
+                                <th class="p-3 rounded-l-xl">Date & Time</th>
+                                <th class="p-3">Product Grade</th>
+                                <th class="p-3">Action Type</th>
+                                <th class="p-3">Quantity (Qtl)</th>
+                                <th class="p-3 rounded-r-xl">Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-log-table" class="divide-y divide-gray-150 dark:divide-gray-700/50">
+                            <!-- Injected dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PANEL 8: ORDERS ================= -->
+        <section id="panel-orders" class="tab-panel hidden space-y-5">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                    <h2 class="text-xl font-extrabold text-gray-800 dark:text-white">Sales Orders Matrix</h2>
+                    <p class="text-xs font-semibold text-gray-500">Manage dispatches, invoicing, and order states.</p>
+                </div>
+                <button onclick="openFormModal('order')" class="bg-jaggery-color text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md hover:bg-amber-700 transition flex items-center gap-2 w-full sm:w-auto justify-center focus:outline-none">
+                    <i class="fa-solid fa-file-invoice"></i> Create Order
+                </button>
+            </div>
+            <div id="order-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+
+        <!-- ================= PANEL 9: PAYMENTS ================= -->
+        <section id="panel-payments" class="tab-panel hidden space-y-5">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                    <h2 class="text-xl font-extrabold text-gray-800 dark:text-white">Financial Cashbook Ledger</h2>
+                    <p class="text-xs font-semibold text-gray-500">Track collections, advances, and pending dues.</p>
+                </div>
+                <button onclick="openFormModal('payment')" class="bg-emerald-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md hover:bg-emerald-700 transition flex items-center gap-2 w-full sm:w-auto justify-center focus:outline-none">
+                    <i class="fa-solid fa-indian-rupee-sign"></i> Log Payment
+                </button>
+            </div>
+            <div id="payment-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+
+        <!-- ================= PANEL 10: SEARCH ================= -->
+        <section id="panel-search" class="tab-panel hidden space-y-5">
+            <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 space-y-4 shadow-sm">
+                <div>
+                    <h2 class="text-lg font-extrabold">Smart Global Search</h2>
+                    <p class="text-xs font-semibold text-gray-500">Instantly query names, numbers, or tags across all databases.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="relative sm:col-span-2">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400"></i>
+                        <input type="text" id="filter-keyword" oninput="debouncedSearch()" placeholder="Type Name, Location, Phone..." class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl py-2.5 pl-9 pr-3 outline-none focus:border-amber-500 transition">
+                    </div>
+                    <select id="filter-priority" onchange="runAdvancedFilters()" class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-2.5 outline-none focus:border-amber-500 transition">
+                        <option value="">-- Priority Filters --</option>
+                        <option value="High">High Priority Profile</option>
+                        <option value="Medium">Medium Priority Profile</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="search-results-output" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="col-span-full text-center py-12 text-gray-400 text-sm font-bold uppercase tracking-widest border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-2xl">
+                    Type text above to display matched database records.
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PANEL 11: SETTINGS ================= -->
+        <section id="panel-settings" class="tab-panel hidden space-y-6">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 space-y-4 shadow-sm relative overflow-hidden">
+                <div class="absolute right-[-10px] top-[-10px] text-6xl text-purple-100 dark:text-purple-900/30 opacity-55 pointer-events-none"><i class="fa-solid fa-robot"></i></div>
+                <h3 class="text-base font-extrabold text-purple-600 dark:text-purple-400 flex items-center gap-2 uppercase tracking-wider relative z-10"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Engine Config</h3>
+                <div class="space-y-2 relative z-10">
+                    <label class="block text-xs font-black text-gray-500 uppercase tracking-widest">Gemini 2.5 API Key</label>
+                    <input type="password" id="cfg-gemini-key" placeholder="Paste Key Here..." class="w-full md:w-1/2 text-sm font-mono border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 outline-none focus:border-purple-500">
+                    <p class="text-[10px] font-bold text-gray-400 mt-1">*Kept secure locally in your browser storage. Required for AI features.</p>
+                </div>
+            </div>
+
+            <!-- Bulk Import Section -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 space-y-4 shadow-sm">
+                <h3 class="text-base font-extrabold flex items-center gap-2 uppercase tracking-wider"><i class="fa-solid fa-upload text-blue-600"></i> Bulk Import</h3>
+                <p class="text-xs font-semibold text-gray-500">Upload CSV file to add multiple buyers at once. Maximum 2000 records per import.</p>
+                <div class="flex flex-wrap gap-3">
+                    <input type="file" id="csv-upload" accept=".csv" class="hidden" onchange="handleCSVImport(event)">
+                    <button onclick="document.getElementById('csv-upload').click()" class="bg-blue-600 text-white text-xs font-bold px-5 py-3 rounded-xl transition hover:bg-blue-700 flex items-center gap-2 focus:outline-none">
+                        <i class="fa-solid fa-file-csv"></i> Upload CSV
+                    </button>
+                    <button onclick="downloadCSVTemplate()" class="bg-gray-600 text-white text-xs font-bold px-5 py-3 rounded-xl transition hover:bg-gray-700 flex items-center gap-2 focus:outline-none">
+                        <i class="fa-solid fa-download"></i> Download Template
+                    </button>
+                    <button onclick="generateSampleBuyers()" class="bg-purple-600 text-white text-xs font-bold px-5 py-3 rounded-xl transition hover:bg-purple-700 flex items-center gap-2 focus:outline-none">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Generate 100 Sample Buyers
+                    </button>
+                </div>
+                <div id="import-progress" class="hidden mt-3">
+                    <div class="flex justify-between text-xs font-bold text-gray-500 mb-1">
+                        <span id="import-status">Importing 0/0 buyers...</span>
+                        <span id="import-percentage">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                        <div id="import-progress-bar" class="bg-blue-600 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div id="import-result" class="hidden mt-2"></div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 space-y-4 shadow-sm">
+                <h3 class="text-base font-extrabold flex items-center gap-2 uppercase tracking-wider"><i class="fa-solid fa-server"></i> Database Operations</h3>
+                <p class="text-xs font-semibold text-gray-500">Export your local data to JSON to ensure backup safety before resetting.</p>
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="exportDatabaseJSON()" class="bg-gray-800 text-white text-xs font-bold px-5 py-3 rounded-xl transition hover:bg-gray-700 flex items-center gap-2 focus:outline-none"><i class="fa-solid fa-download"></i> Export Data Backup</button>
+                    <button onclick="triggerDataReset()" class="bg-red-50 text-red-600 border border-red-200 dark:bg-red-900/20 dark:border-red-900/50 text-xs font-bold px-5 py-3 rounded-xl transition hover:bg-red-100 flex items-center gap-2 focus:outline-none"><i class="fa-solid fa-trash-can"></i> Hard Factory Reset</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Season Settings -->
+<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 space-y-4 shadow-sm">
+    <h3 class="text-base font-extrabold flex items-center gap-2 uppercase tracking-wider"><i class="fa-solid fa-calendar-check text-amber-600"></i> Season Targets</h3>
+    <p class="text-xs font-semibold text-gray-500">Set your season goals to track progress.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div>
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Total Target (Qtl)</label>
+            <input type="number" id="season-target" placeholder="50000" class="w-full text-sm font-bold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 outline-none focus:border-amber-500">
+        </div>
+        <div>
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Min Price (₹/Qtl)</label>
+            <input type="number" id="min-acceptable-price" placeholder="3500" class="w-full text-sm font-bold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 outline-none focus:border-amber-500">
+        </div>
+        <div>
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Target Revenue (₹)</label>
+            <input type="number" id="season-revenue-target" placeholder="200000000" class="w-full text-sm font-bold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 outline-none focus:border-amber-500">
+        </div>
+    </div>
+    <button onclick="saveSeasonTargets()" class="bg-amber-600 text-white text-xs font-bold px-5 py-3 rounded-xl transition hover:bg-amber-700 flex items-center gap-2 focus:outline-none">
+        <i class="fa-solid fa-floppy-disk"></i> Save Season Targets
+    </button>
+</div>
+
+<!-- ============================================
+     NEW SECTION: BULK COMMUNICATION
+     ============================================ -->
+<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 space-y-4 shadow-sm">
+    <h3 class="text-base font-extrabold flex items-center gap-2 uppercase tracking-wider">
+        <i class="fa-solid fa-bullhorn text-emerald-600"></i> Bulk Communication
+    </h3>
+    <p class="text-xs font-semibold text-gray-500">Send bulk WhatsApp/SMS messages to selected buyers.</p>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Target Segment</label>
+            <select id="campaign-segment" class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 outline-none focus:border-amber-500">
+                <option value="all">All Buyers</option>
+                <option value="premium">⭐ Premium Buyers</option>
+                <option value="medium">📈 Medium Buyers</option>
+                <option value="new">🌱 New Buyers</option>
+                <option value="negotiation">🤝 In Negotiation</option>
+                <option value="repeat">🔄 Repeat Buyers</option>
+            </select>
+        </div>
+        <div>
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Template</label>
+            <select id="campaign-template" class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 outline-none focus:border-amber-500">
+                <option value="season-start">🌾 Season Start Announcement</option>
+                <option value="price-drop">💰 Price Drop Alert</option>
+                <option value="limited-stock">📦 Limited Stock Alert</option>
+                <option value="festival">🎉 Festival Offer</option>
+                <option value="follow-up">📞 Follow-up Reminder</option>
+                <option value="referral">🤝 Referral Request</option>
+            </select>
+        </div>
+    </div>
+    <div>
+        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Custom Message</label>
+        <textarea id="campaign-message" rows="3" placeholder="Type your message here..." class="w-full text-sm font-medium p-4 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl outline-none focus:border-amber-500 transition resize-none"></textarea>
+    </div>
+    <div class="flex flex-wrap gap-3">
+        <button onclick="loadTemplate()" class="bg-gray-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition hover:bg-gray-700 flex items-center gap-2 focus:outline-none">
+            <i class="fa-solid fa-file-pen"></i> Load Template
+        </button>
+        <button onclick="sendBulkMessage()" class="bg-emerald-600 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition hover:bg-emerald-700 flex items-center gap-2 focus:outline-none">
+            <i class="fa-brands fa-whatsapp"></i> Send WhatsApp
+        </button>
+        <button onclick="sendBulkSMS()" class="bg-blue-600 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition hover:bg-blue-700 flex items-center gap-2 focus:outline-none">
+            <i class="fa-solid fa-sms"></i> Send SMS
+        </button>
+        <button onclick="copyPhonesToClipboard()" class="bg-purple-600 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition hover:bg-purple-700 flex items-center gap-2 focus:outline-none">
+            <i class="fa-regular fa-copy"></i> Copy Phones
+        </button>
+    </div>
+    <div id="campaign-progress" class="hidden mt-2">
+        <div class="flex justify-between text-xs font-bold text-gray-500 mb-1">
+            <span id="campaign-status">Sending 0/0 messages...</span>
+            <span id="campaign-percentage">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+            <div id="campaign-progress-bar" class="bg-emerald-600 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================
+     NEW SECTION: PRICE TRACKER
+     ============================================ -->
+<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 space-y-4 shadow-sm">
+    <h3 class="text-base font-extrabold flex items-center gap-2 uppercase tracking-wider">
+        <i class="fa-solid fa-chart-line text-blue-600"></i> Price Tracker
+    </h3>
+    <p class="text-xs font-semibold text-gray-500">Track market prices and competitor rates.</p>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+        <div>
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Product</label>
+            <select id="price-product" class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 outline-none focus:border-amber-500">
+                <option>Laddu Gud</option>
+                <option>Block Gud</option>
+                <option>Powder Gud</option>
+                <option>Organic Gud</option>
+                <option>Liquid Gud</option>
+            </select>
+        </div>
+        <div>
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Current Price (₹/Qtl)</label>
+            <input type="number" id="current-price" placeholder="3800" class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 outline-none focus:border-amber-500">
+        </div>
+        <div>
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Competitor Price</label>
+            <input type="number" id="competitor-price" placeholder="3750" class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 outline-none focus:border-amber-500">
+        </div>
+        <div>
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Market Trend</label>
+            <select id="market-trend" class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 outline-none focus:border-amber-500">
+                <option value="up">📈 Rising</option>
+                <option value="stable">➡️ Stable</option>
+                <option value="down">📉 Falling</option>
+            </select>
+        </div>
+    </div>
+    <button onclick="savePriceUpdate()" class="bg-blue-600 text-white text-xs font-bold px-5 py-3 rounded-xl transition hover:bg-blue-700 flex items-center gap-2 focus:outline-none">
+        <i class="fa-solid fa-floppy-disk"></i> Save Price Update
+    </button>
+    <div id="price-history" class="mt-3 max-h-40 overflow-y-auto hide-scroll"></div>
+</div>
+
+<!-- ============================================
+     NEW SECTION: SMART NEGOTIATION
+     ============================================ -->
+<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 space-y-4 shadow-sm">
+    <h3 class="text-base font-extrabold flex items-center gap-2 uppercase tracking-wider">
+        <i class="fa-solid fa-handshake text-amber-600"></i> Smart Negotiation Assistant
+    </h3>
+    <p class="text-xs font-semibold text-gray-500">Get optimal pricing strategy for each buyer.</p>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div>
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Select Buyer</label>
+            <select id="negotiation-buyer" class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 outline-none focus:border-amber-500">
+                <option value="">-- Select Buyer --</option>
+            </select>
+        </div>
+        <div>
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Buyer's Offer (₹)</label>
+            <input type="number" id="buyer-offer" placeholder="3700" class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 outline-none focus:border-amber-500">
+        </div>
+        <div>
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Your Min Price</label>
+            <input type="number" id="min-price-negotiation" placeholder="3500" class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 outline-none focus:border-amber-500">
+        </div>
+    </div>
+    
+    <div id="negotiation-suggestion" class="bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-950/30 dark:to-amber-900/30 p-4 rounded-xl border border-amber-200 dark:border-amber-800">
+        <p class="text-xs font-bold text-gray-600 dark:text-gray-300">💡 Select a buyer and enter their offer to get negotiation strategy.</p>
+    </div>
+</div>
+
+<!-- ============================================
+     NEW SECTION: EXPENSE TRACKER
+     ============================================ -->
+<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 space-y-4 shadow-sm">
+    <h3 class="text-base font-extrabold flex items-center gap-2 uppercase tracking-wider">
+        <i class="fa-solid fa-wallet text-red-600"></i> Expense Tracker
+    </h3>
+    <p class="text-xs font-semibold text-gray-500">Track all business expenses and calculate net profit.</p>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div>
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Expense Category</label>
+            <select id="expense-category" class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 outline-none focus:border-amber-500">
+                <option>Transport/Logistics</option>
+                <option>Marketing/Ads</option>
+                <option>Commission</option>
+                <option>Sampling/Gifts</option>
+                <option>Travel</option>
+                <option>Other</option>
+            </select>
+        </div>
+        <div>
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Amount (₹)</label>
+            <input type="number" id="expense-amount" placeholder="5000" class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 outline-none focus:border-amber-500">
+        </div>
+        <div>
+            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Notes</label>
+            <input type="text" id="expense-notes" placeholder="Fuel for delivery" class="w-full text-sm font-semibold border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 outline-none focus:border-amber-500">
+        </div>
+    </div>
+    <button onclick="addExpense()" class="bg-red-600 text-white text-xs font-bold px-5 py-3 rounded-xl transition hover:bg-red-700 flex items-center gap-2 focus:outline-none">
+        <i class="fa-solid fa-plus"></i> Add Expense
+    </button>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
+        <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-xl text-center">
+            <span class="text-[10px] font-black text-gray-400 block">Total Expenses</span>
+            <span class="text-lg font-extrabold text-red-600" id="total-expenses">₹0</span>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-xl text-center">
+            <span class="text-[10px] font-black text-gray-400 block">Total Revenue</span>
+            <span class="text-lg font-extrabold text-emerald-600" id="total-revenue-expense">₹0</span>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-xl text-center">
+            <span class="text-[10px] font-black text-gray-400 block">Net Profit</span>
+            <span class="text-lg font-extrabold text-amber-600" id="net-profit">₹0</span>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded-xl text-center">
+            <span class="text-[10px] font-black text-gray-400 block">Margin %</span>
+            <span class="text-lg font-extrabold text-blue-600" id="profit-margin">0%</span>
+        </div>
+    </div>
+    <div id="expense-log" class="max-h-40 overflow-y-auto hide-scroll mt-3"></div>
+</div>
+
+<!-- Deal Pipeline View -->
+<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 space-y-4 shadow-sm">
+    <h3 class="text-base font-extrabold flex items-center gap-2 uppercase tracking-wider"><i class="fa-solid fa-chart-simple text-blue-600"></i> Deal Pipeline</h3>
+    <div id="pipeline-container" class="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <div class="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-3">
+            <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest">New Leads</div>
+            <div class="text-2xl font-extrabold text-blue-600" id="pipeline-new">0</div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-3">
+            <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Negotiation</div>
+            <div class="text-2xl font-extrabold text-amber-600" id="pipeline-negotiation">0</div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-3">
+            <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Order Placed</div>
+            <div class="text-2xl font-extrabold text-emerald-600" id="pipeline-order">0</div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-3">
+            <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Delivered</div>
+            <div class="text-2xl font-extrabold text-purple-600" id="pipeline-delivered">0</div>
+        </div>
+    </div>
+</div>
+
+    </main>
+
+    <!-- ================= SYSTEM POPUPS & MODAL FORMS ================= -->
+
+    <!-- Global Registration Form Sheet -->
+    <div id="form-modal" class="fixed inset-0 z-50 bg-gray-900/70 backdrop-blur-sm flex items-end md:items-center justify-center hidden transition-opacity">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-2xl rounded-t-3xl md:rounded-2xl shadow-2xl flex flex-col max-h-[85vh] md:max-h-[90vh] overflow-hidden transform transition-transform translate-y-full md:translate-y-0" id="form-modal-content">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-900/40">
+                <div>
+                    <h3 id="modal-form-title" class="text-base font-extrabold tracking-tight">Data Registration</h3>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mt-0.5">Fill details securely</p>
+                </div>
+                <button onclick="closeFormModal()" class="text-gray-400 hover:text-white p-2 bg-gray-200 dark:bg-gray-700 rounded-full transition focus:outline-none"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="p-5 overflow-y-auto space-y-4 flex-1 bg-white dark:bg-gray-800 hide-scroll" id="modal-form-fields-container">
+                <!-- Javascript Injection Area -->
+            </div>
+            
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40 flex gap-3 pb-safe">
+                <button onclick="closeFormModal()" class="flex-1 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-extrabold rounded-xl transition hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none">Cancel</button>
+                <button onclick="submitActiveForm()" class="flex-1 py-3 bg-jaggery-color text-white text-sm font-extrabold rounded-xl transition shadow-md hover:bg-amber-700 focus:outline-none">Save Record</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Smart Clipboard AI Extract Modal -->
+    <div id="smart-clipboard-modal" class="fixed inset-0 z-50 bg-gray-900/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-gray-800 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden border border-amber-200 dark:border-amber-900/50">
+            <div class="p-5 bg-gradient-to-r from-amber-100 to-amber-50 dark:from-gray-800 dark:to-gray-850 border-b border-amber-200 dark:border-gray-700 flex justify-between items-center">
+                <div class="flex items-center gap-3 text-amber-700 dark:text-amber-500">
+                    <div class="w-10 h-10 rounded-full bg-white dark:bg-gray-700 shadow-sm flex items-center justify-center"><i class="fa-solid fa-wand-magic-sparkles text-lg animate-pulse"></i></div>
+                    <h3 class="text-base font-extrabold">Smart AI Parser</h3>
+                </div>
+                <button onclick="closeSmartClipboard()" class="text-gray-400 hover:text-gray-800 p-2 focus:outline-none"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-5 space-y-4">
+                <p class="text-xs font-semibold text-gray-500 dark:text-gray-400">Paste raw text block (WhatsApp, IndiaMART, Map, etc). Gemini AI will auto-extract structural properties.</p>
+                <textarea id="raw-ai-paste-box" rows="5" placeholder="Paste unfiltered raw text here..." class="w-full text-sm font-medium p-4 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-2xl outline-none focus:border-amber-500 transition resize-none"></textarea>
+                
+                <div>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Target CRM Module</label>
+                    <select id="ai-target-module" class="w-full text-sm font-bold bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3 outline-none focus:border-amber-500">
+                        <option value="buyer">Buyer Lead Profile</option>
+                        <option value="supplier">Supplier Khandsari Record</option>
+                    </select>
+                </div>
+            </div>
+            <div class="p-5 border-t border-gray-100 dark:border-gray-700 flex gap-3">
+                <button onclick="executeClipboardAI()" id="ai-parse-btn" class="w-full py-3 bg-jaggery-color hover:bg-amber-700 text-white text-sm font-extrabold rounded-xl shadow-md flex items-center justify-center gap-2 transition focus:outline-none">
+                    <i class="fa-solid fa-bolt"></i> Extract Data Form
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Central Toast System Overlay -->
+    <div id="toast-container" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 z-[60] flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ================= EXTERNAL JAVASCRIPT FILE ================= -->
+    <script src="script.js"></script>
+</body>
+</html>
